@@ -1,6 +1,6 @@
 {
   "name": "x-collect",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A utility that provides a fluent, convenient interface for working with arrays of data in JavaScript. Influenced by Laravel Collections.",
   "main": "index.js",
   "scripts": {

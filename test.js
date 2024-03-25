@@ -1,6 +1,6 @@
-const Collection = require('./index');
+const XCollect = require('./index');
 
-const myCollection = new Collection([1, 2, 3, 4, 5]);
+const myCollection = new XCollect([1, 2, 3, 4, 5]);
 
 console.log('Test [all]: ', myCollection.all());
 // Output: [1, 2, 3, 4, 5]
@@ -32,7 +32,7 @@ console.log('Test [crossJoin]: ', myCollection.crossJoin(['a', 'b'], ['x', 'y'])
 // Output: [["a", "x"], ["a", "y"], ["b", "x"], ["b", "y"]]
 //console.log('Test [dd]:', myCollection.dd());
 // Output: [1, 2, 2, 3, 4, 5] (in console), then script execution ends
-console.log('Test [diff]:', myCollection.diff([2, 3, 6], new Collection([4, 5, 7])).all());
+console.log('Test [diff]:', myCollection.diff([2, 3, 6], new XCollect([4, 5, 7])).all());
 // Output: [1]
 console.log('Test [diffKeys]:', myCollection.diffKeys([2, 4]).all());
 // Output: [1, 3, 5]
@@ -50,7 +50,7 @@ myCollection.each(item => console.log(item));
 // Output: 1, 2, 2, 3, 4, 5 (each on separate line)
 myCollection.eachSpread((a, b) => console.log(a, b));
 // Output: undefined undefined (for each item)
-console.log('Test [ensure]:', myCollection.ensure(6, 'default').all());
+console.log('Test [ensure]:', myCollection.ensure(10, 'default').all());
 // Output: [1, 2, 2, 3, 4, 5, 6: 'default']
 console.log('Test [every]:', myCollection.every(item => item > 0));
 // Output: true
@@ -88,9 +88,9 @@ console.log('Test [hasAny]:', myCollection.hasAny([0, 6]));
 // Output: false
 console.log('Test [implode]:', myCollection.implode('-'));
 // Output: 1-2-3-4-5
-console.log('Test [intersect]:', myCollection.intersect([2, 3, 6], new Collection([4, 5, 7])).all());
+console.log('Test [intersect]:', myCollection.intersect([2, 3, 6], new XCollect([4, 5, 7])).all());
 // Output: [2, 3, 4, 5]
-console.log('Test [intersectAssoc]:', myCollection.intersectAssoc([2, 3, 6], new Collection([4, 5, 7])).all());
+console.log('Test [intersectAssoc]:', myCollection.intersectAssoc([2, 3, 6], new XCollect([4, 5, 7])).all());
 // Output: [2, 3, 4, 5]
 console.log('Test [intersectByKeys]:', myCollection.intersectByKeys([2, 4, 6]).all());
 // Output: [2, 4]
@@ -113,7 +113,7 @@ myCollection.macro('toUpperCase', function (collection) {
 });
 console.log('Test [toUpperCase]:', myCollection.toUpperCase().all());
 // Output: ['ALICE', 'BOB', 'CHARLIE']
-const newCollection = Collection.make([1, 2, 3]);
+const newCollection = XCollect.make([1, 2, 3]);
 console.log('Test [newCollection]:', newCollection.map(item => item * 2).all());
 // Output: [2, 4, 6]
 console.log('Test [mapInto]:', myCollection.mapInto(String).all());
@@ -129,9 +129,9 @@ console.log('Test: [max]', myCollection.max());
 // Output: 5
 console.log('Test: [median]', myCollection.median());
 // Output: 3
-console.log('Test: [merge]', myCollection.merge([6, 7, 8], new Collection([9, 10])).all());
+console.log('Test: [merge]', myCollection.merge([6, 7, 8], new XCollect([9, 10])).all());
 // Output: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-console.log('Test: [mergeRecursive]', myCollection.mergeRecursive([6, [7, 8]], new Collection([[9], 10])).all());
+console.log('Test: [mergeRecursive]', myCollection.mergeRecursive([6, [7, 8]], new XCollect([[9], 10])).all());
 // Output: [1, 2, 3, 4, 5, 6, [7, 8], [9], 10]
 console.log('Test: [min]', myCollection.min());
 // Output: 1
@@ -149,7 +149,7 @@ console.log('Test: [percentage]', myCollection.percentage(100));
 // Output: [ NaN, 30 ]
 console.log('Test: [pipe]', myCollection.pipe(collection => collection.map(value => value.toString().toUpperCase())).all());
 // Output: [ 'JOHN', 30 ]
-console.log('Test: [pipeInto]', myCollection.pipeInto(Collection, collection => collection.map(value => value.toString().toUpperCase())).all());
+console.log('Test: [pipeInto]', myCollection.pipeInto(XCollect, collection => collection.map(value => value.toString().toUpperCase())).all());
 // Output: [ 'JOHN', 30 ]
 console.log('Test: [pipeThrough]', myCollection.pipeThrough(collection => collection.map(value => value.toString().toUpperCase()), collection => collection.join(' ')));
 // Output: 'JOHN 30'
@@ -160,44 +160,83 @@ console.log('Test: [pop]', myCollection.pop());
 console.log('Test: [prepend]', myCollection.prepend(40));
 // Output: [ 40, 'John' ]
 
-console.log(myCollection.pull(3)); // Output: 3 (removed from collection)
-console.log(myCollection.push(6)); // Output: Collection { items: [ 1, 2, 4, 5, 6 ] }
-console.log(myCollection.put(2, 'two')); // Output: Collection { items: [ 1, 2, 'two', 4, 5, 6 ] }
-console.log(myCollection.random()); // Output: Random item from the collection
-console.log(Collection.range(1, 5)); // Output: Collection { items: [ 1, 2, 3, 4, 5 ] }
-console.log(myCollection.reduce((acc, curr) => acc + curr, 0)); // Output: Sum of all items
-console.log(myCollection.reduceSpread((a, b, c, d, e) => a + b + c + d + e)); // Output: Sum of all items
-console.log(myCollection.reject(item => item % 2 === 0)); // Output: Collection without even numbers
-console.log(myCollection.replace(2, 'two')); // Output: Collection with 'two' replacing 2
-console.log(myCollection.replaceRecursive(2, 'two')); // Output: Collection with 'two' replacing 2
-console.log(myCollection.reverse()); // Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
-console.log(myCollection.search(4)); // Output: 1 (index of value 4)
-console.log(myCollection.select(item => item % 2 === 0)); // Output: Collection with only even numbers
-console.log(myCollection.shift()); // Output: 1 (removed from collection)
-console.log(myCollection.shuffle()); // Output: Collection with shuffled items
-console.log(myCollection.skip(2)); // Output: Collection { items: [ 3, 4, 5 ] }
-console.log(myCollection.skipUntil(item => item >= 3)); // Output: Collection { items: [ 3, 4, 5 ] }
-console.log(myCollection.skipWhile(item => item < 3)); // Output: Collection { items: [ 3, 4, 5 ] }
-console.log(myCollection.slice(1, 3)); // Output: Collection { items: [ 2, 3 ] }
+console.log('Test: [pull]', myCollection.pull(3)); 
+// Output: 3 (removed from collection)
+console.log('Test: [push]', myCollection.push(6)); 
+// Output: Collection { items: [ 1, 2, 4, 5, 6 ] }
+console.log('Test: [put]', myCollection.put(2, 'two')); 
+// Output: Collection { items: [ 1, 2, 'two', 4, 5, 6 ] }
+console.log('Test: [random]', myCollection.random()); 
+// Output: Random item from the collection
+console.log(XCollect.range(1, 5)); 
+// Output: Collection { items: [ 1, 2, 3, 4, 5 ] }
+console.log('Test: [reduce]', myCollection.reduce((acc, curr) => acc + curr, 0)); 
+// Output: Sum of all items
+console.log('Test: [reduceSpread]', myCollection.reduceSpread((a, b, c, d, e) => a + b + c + d + e)); 
+// Output: Sum of all items
+console.log('Test: [reject]', myCollection.reject(item => item % 2 === 0)); 
+// Output: Collection without even numbers
+console.log('Test: [replace]', myCollection.replace(2, 'two')); 
+// Output: Collection with 'two' replacing 2
+console.log('Test: [replaceRecursive]', myCollection.replaceRecursive(2, 'two')); 
+// Output: Collection with 'two' replacing 2
+console.log('Test: [reverse]', myCollection.reverse()); 
+// Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
+console.log('Test: [search]', myCollection.search(4)); 
+// Output: 1 (index of value 4)
+console.log('Test: [select]', myCollection.select(item => item % 2 === 0)); 
+// Output: Collection with only even numbers
+console.log('Test: [shift]', myCollection.shift()); 
+// Output: 1 (removed from collection)
+console.log('Test: [shuffle]', myCollection.shuffle()); 
+// Output: Collection with shuffled items
+console.log('Test: [skip]', myCollection.skip(2)); 
+// Output: Collection { items: [ 3, 4, 5 ] }
+console.log('Test: [skipUntil]', myCollection.skipUntil(item => item >= 3)); 
+// Output: Collection { items: [ 3, 4, 5 ] }
+console.log('Test: [skipWhile]', myCollection.skipWhile(item => item < 3)); 
+// Output: Collection { items: [ 3, 4, 5 ] }
+console.log('Test: [slice]', myCollection.slice(1, 3)); 
+// Output: Collection { items: [ 2, 3 ] }
 
-// console.log(myCollection.sliding(2, chunk => chunk.sum())); // Output: [ 4, 3, 7, 9 ]
-// console.log(myCollection.sole()); // Output: 3
-console.log(myCollection.some(item => item > 5)); // Output: true or false
-console.log(myCollection.sort()); // Output: Collection { items: [ 1, 2, 3, 4, 5 ] }
-console.log(myCollection.sortBy('desc')); // Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
-console.log(myCollection.sortByDesc('desc')); // Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
-console.log(myCollection.sortDesc()); // Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
-console.log(new Collection({ b: 2, a: 1 }).sortKeys()); // Output: Collection { items: [ 'a', 'b' ] }
-console.log(new Collection({ b: 2, a: 1 }).sortKeysDesc()); // Output: Collection { items: [ 'b', 'a' ] }
-console.log(new Collection({ b: 2, a: 1 }).sortKeysUsing((a, b) => b.localeCompare(a))); // Output: Collection { items: [ 'b', 'a' ] }
+// console.log('Test: [sliding]', myCollection.sliding(2, chunk => chunk.sum())); 
+// Output: [ 4, 3, 7, 9 ]
+// console.log('Test: [sole]', myCollection.sole()); 
+// Output: 3
+console.log('Test: [some]', myCollection.some(item => item > 5)); 
+// Output: true or false
+console.log('Test: [sort]', myCollection.sort()); 
+// Output: Collection { items: [ 1, 2, 3, 4, 5 ] }
+console.log('Test: [sortBy]', myCollection.sortBy('desc')); 
+// Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
+console.log('Test: [sortByDesc]', myCollection.sortByDesc('desc')); 
+// Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
+console.log('Test: [sortDesc]', myCollection.sortDesc()); 
+// Output: Collection { items: [ 5, 4, 3, 2, 1 ] }
+console.log(new XCollect({ b: 2, a: 1 }).sortKeys()); 
+// Output: Collection { items: [ 'a', 'b' ] }
+console.log(new XCollect({ b: 2, a: 1 }).sortKeysDesc()); 
+// Output: Collection { items: [ 'b', 'a' ] }
+console.log(new XCollect({ b: 2, a: 1 }).sortKeysUsing((a, b) => b.localeCompare(a))); 
+// Output: Collection { items: [ 'b', 'a' ] }
 
-console.log(myCollection.splice(2, 2, 6, 7)); // Output: Collection { items: [ 3, 4 ] }
-console.log(myCollection.split(2)); // Output: Collection { items: [ [ 1, 2 ], [ 3, 4 ], [ 5 ] ] }
-console.log(myCollection.splitUntil(item => item === 4)); // Output: Collection { items: [ [ 1, 2, 3 ], [ 4 ] ] }
-console.log(myCollection.sum()); // Output: 15
-console.log(myCollection.take(3)); // Output: Collection { items: [ 1, 2, 3 ] }
-console.log(myCollection.takeUntil(item => item === 3)); // Output: Collection { items: [ 1, 2 ] }
-console.log(myCollection.takeWhile(item => item !== 3)); // Output: Collection { items: [ 1, 2 ] }
-console.log(myCollection.tap(items => console.log(items))); // Output: [1, 2, 3, 4, 5] (logged and returns the collection)
-console.log(Collection.times(3, index => index + 1)); // Output: Collection { items: [ 1, 2, 3 ] }
-console.log(myCollection.toArray()); // Output: [1, 2, 3, 4, 5]
+console.log('Test: [splice]', myCollection.splice(2, 2, 6, 7)); 
+// Output: Collection { items: [ 3, 4 ] }
+console.log('Test: [split]', myCollection.split(2)); 
+// Output: Collection { items: [ [ 1, 2 ], [ 3, 4 ], [ 5 ] ] }
+console.log('Test: [splitUntil]', myCollection.splitUntil(item => item === 4)); 
+// Output: Collection { items: [ [ 1, 2, 3 ], [ 4 ] ] }
+console.log('Test: [sum]', myCollection.sum()); 
+// Output: 15
+console.log('Test: [take]', myCollection.take(3)); 
+// Output: Collection { items: [ 1, 2, 3 ] }
+console.log('Test: [takeUntil]', myCollection.takeUntil(item => item === 3)); 
+// Output: Collection { items: [ 1, 2 ] }
+console.log('Test: [takeWhile]', myCollection.takeWhile(item => item !== 3)); 
+// Output: Collection { items: [ 1, 2 ] }
+console.log('Test: [tap]', myCollection.tap(items => console.log(items))); 
+// Output: [1, 2, 3, 4, 5] (logged and returns the collection)
+console.log(XCollect.times(3, index => index + 1)); 
+// Output: Collection { items: [ 1, 2, 3 ] }
+console.log('Test: [toArray]', myCollection.toArray()); 
+// Output: [1, 2, 3, 4, 5]

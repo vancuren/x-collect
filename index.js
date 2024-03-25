@@ -1,4 +1,4 @@
-class Collection {
+class XCollect {
     constructor(items = []) {
         this.items = items;
     }
@@ -24,7 +24,7 @@ class Collection {
         for (let i = 0; i < this.items.length; i += size) {
             chunks.push(this.items.slice(i, i + size));
         }
-        return new Collection(chunks);
+        return new XCollect(chunks);
     }
 
     // Chunks the collection based on a predicate function
@@ -42,12 +42,12 @@ class Collection {
         if (currentChunk.length > 0) {
             chunks.push(currentChunk);
         }
-        return new Collection(chunks);
+        return new XCollect(chunks);
     }
 
     // Collapses a collection of arrays into a single, flat collection
     collapse() {
-        return new Collection(this.items.reduce((acc, val) => acc.concat(val), []));
+        return new XCollect(this.items.reduce((acc, val) => acc.concat(val), []));
     }
 
     // Alias for collapse method
@@ -66,7 +66,7 @@ class Collection {
 
     // Concatenates the given array or collection onto the end of the current collection
     concat(arrayOrCollection) {
-        return new Collection(this.items.concat(arrayOrCollection instanceof Collection ? arrayOrCollection.all() : arrayOrCollection));
+        return new XCollect(this.items.concat(arrayOrCollection instanceof XCollect ? arrayOrCollection.all() : arrayOrCollection));
     }
 
     // Checks if the collection contains the given item or value
@@ -113,7 +113,7 @@ class Collection {
     crossJoin(...arraysOrCollections) {
         const product = [[]];
         arraysOrCollections.forEach(arrOrCol => {
-            const items = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const items = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             const newProduct = [];
             product.forEach(prevProduct => {
                 items.forEach(item => {
@@ -122,7 +122,7 @@ class Collection {
             });
             product.splice(0, product.length, ...newProduct);
         });
-        return new Collection(product);
+        return new XCollect(product);
     }
 
     // Dumps the collection's items and ends execution of the script
@@ -135,15 +135,15 @@ class Collection {
     diff(...arraysOrCollections) {
         let diff = this.items.slice();
         arraysOrCollections.forEach(arrOrCol => {
-            const localItems = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const localItems = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             diff = diff.filter(scopedItem => !localItems.includes(scopedItem));
         });
-        return new Collection(diff);
+        return new XCollect(diff);
     }
 
     // Computes the difference of the collection with keys, using strict equality
     diffKeys(keys) {
-        return new Collection(this.items.filter(item => !keys.includes(item)));
+        return new XCollect(this.items.filter(item => !keys.includes(item)));
     }    
 
     // Returns true if the collection does not contain the given item
@@ -179,7 +179,7 @@ class Collection {
                 seen.add(item);
             }
         });
-        return new Collection([...new Set(duplicates)]);
+        return new XCollect([...new Set(duplicates)]);
     }
 
     // Returns the duplicate values in the collection (strict comparison)
@@ -192,7 +192,7 @@ class Collection {
                 }
             }
         }
-        return new Collection([...new Set(duplicates)]);
+        return new XCollect([...new Set(duplicates)]);
     }
 
     // Iterates over the items in the collection and executes a callback for each item
@@ -226,12 +226,12 @@ class Collection {
 
     // Returns all items in the collection except for those with specified keys
     except(keys) {
-        return new Collection(this.items.filter((_, index) => !keys.includes(index)));
+        return new XCollect(this.items.filter((_, index) => !keys.includes(index)));
     }    
 
     // Filters the collection using the given callback
     filter(callback) {
-        return new Collection(this.items.filter(callback));
+        return new XCollect(this.items.filter(callback));
     }
 
     // Returns the first item in the collection
@@ -254,7 +254,7 @@ class Collection {
 
     // Maps each item in the collection using the given callback and flattens the result
     flatMap(callback) {
-        return new Collection(this.items.map(callback)).flatten();
+        return new XCollect(this.items.map(callback)).flatten();
     }
 
     // Flattens a multi-dimensional collection into a single-dimensional collection
@@ -267,7 +267,7 @@ class Collection {
                 flattened.push(item);
             }
         });
-        return new Collection(flattened);
+        return new XCollect(flattened);
     }
 
     // Exchanges the keys with their corresponding values
@@ -276,7 +276,7 @@ class Collection {
         Object.keys(this.items).forEach(key => {
             flipped[this.items[key]] = key;
         });
-        return new Collection(flipped);
+        return new XCollect(flipped);
     }
 
     // Removes an item from the collection by key
@@ -288,7 +288,7 @@ class Collection {
     // Paginates the collection by a given page size
     forPage(page, perPage) {
         const start = (page - 1) * perPage;
-        return new Collection(this.items.slice(start, start + perPage));
+        return new XCollect(this.items.slice(start, start + perPage));
     }
 
 
@@ -307,7 +307,7 @@ class Collection {
             }
             grouped[groupKey].push(item);
         });
-        return new Collection(grouped);
+        return new XCollect(grouped);
     }
 
     // Checks if the collection has the given key
@@ -329,25 +329,25 @@ class Collection {
     intersect(...arraysOrCollections) {
         let intersected = this.items.slice();
         arraysOrCollections.forEach(arrOrCol => {
-            const items = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const items = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             intersected = intersected.filter(item => items.includes(item));
         });
-        return new Collection(intersected);
+        return new XCollect(intersected);
     }
 
     // Computes the intersection of the collection with keys, using strict equality
     intersectAssoc(...arraysOrCollections) {
         const intersected = [];
         arraysOrCollections.forEach(arrOrCol => {
-            const items = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const items = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             intersected.push(...this.items.filter(item => items.includes(item)));
         });
-        return new Collection(intersected);
+        return new XCollect(intersected);
     }
 
     // Computes the intersection of the collection with keys
     intersectByKeys(keys) {
-        return new Collection(this.items.filter(item => keys.includes(item)));
+        return new XCollect(this.items.filter(item => keys.includes(item)));
     }
 
     // Checks if the collection is empty
@@ -373,7 +373,7 @@ class Collection {
             const keyValue = typeof key === 'function' ? key(item) : item[key];
             keyed[keyValue] = item;
         });
-        return new Collection(keyed);
+        return new XCollect(keyed);
     }
 
     // Retrieves the keys of the collection
@@ -393,29 +393,29 @@ class Collection {
 
     // Adds a custom macro to the collection's prototype
     macro(name, callback) {
-        Collection.prototype[name] = function (...args) {
+        XCollect.prototype[name] = function (...args) {
             return callback(this, ...args);
         };
     }
 
-    // Creates a new collection instance
+    // Creates a new XCollect instance
     static make(items) {
-        return new Collection(items);
+        return new XCollect(items);
     }
 
     // Maps each item in the collection using the given callback
     map(callback) {
-        return new Collection(this.items.map(callback));
+        return new XCollect(this.items.map(callback));
     }
 
     // Maps each item in the collection using the provided callback and creates instances of the given class
     mapInto(Class) {
-        return new Collection(this.items.map(item => new Class(item)));
+        return new XCollect(this.items.map(item => new Class(item)));
     }
 
     // Maps each item in the collection using the provided callback and spreads the result
     mapSpread(callback) {
-        return new Collection(this.items.map(item => {
+        return new XCollect(this.items.map(item => {
             if (Array.isArray(item) || typeof item[Symbol.iterator] === 'function') {
                 return callback(...item);
             } else {
@@ -433,7 +433,7 @@ class Collection {
             }
             groups[key].push(value);
         });
-        return new Collection(groups);
+        return new XCollect(groups);
     }
 
     // Maps each item in the collection using the provided callback and uses the result as keys for the items
@@ -443,7 +443,7 @@ class Collection {
             const [key, value] = callback(item);
             mapped[key] = value;
         });
-        return new Collection(mapped);
+        return new XCollect(mapped);
     }
 
     // Returns the maximum value in the collection
@@ -466,20 +466,20 @@ class Collection {
     merge(...arraysOrCollections) {
         let merged = this.items.slice();
         arraysOrCollections.forEach(arrOrCol => {
-            const items = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const items = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             merged = merged.concat(items);
         });
-        return new Collection(merged);
+        return new XCollect(merged);
     }
 
     // Recursively merges the collection with the given arrays or collections
     mergeRecursive(...arraysOrCollections) {
         let merged = this.items.slice();
         arraysOrCollections.forEach(arrOrCol => {
-            const items = arrOrCol instanceof Collection ? arrOrCol.all() : arrOrCol;
+            const items = arrOrCol instanceof XCollect ? arrOrCol.all() : arrOrCol;
             merged = mergeArraysRecursive(merged, items);
         });
-        return new Collection(merged);
+        return new XCollect(merged);
     }
 
     // Returns the minimum value in the collection
@@ -518,7 +518,7 @@ class Collection {
                 filtered[key] = this.items[key];
             }
         });
-        return new Collection(filtered);
+        return new XCollect(filtered);
     }
 
     // Pads the collection up to the specified length with a given value
@@ -527,7 +527,7 @@ class Collection {
         while (padded.length < length) {
             padded.push(value);
         }
-        return new Collection(padded);
+        return new XCollect(padded);
     }
 
     // Partitions the collection into two arrays based on the given callback
@@ -536,7 +536,7 @@ class Collection {
         this.items.forEach(item => {
             partitioned[callback(item) ? 0 : 1].push(item);
         });
-        return new Collection(partitioned);
+        return new XCollect(partitioned);
     }
 
     // Calculates the percentage of each item's value out of the total
@@ -576,7 +576,7 @@ class Collection {
     // Prepends an item to the beginning of the collection
     prepend(value) {
         const prepended = [value, ...this.items];
-        return new Collection(prepended);
+        return new XCollect(prepended);
     }    
 
     // Removes and returns the item with the given key from the collection
@@ -605,13 +605,13 @@ class Collection {
         return this.items[Math.floor(Math.random() * this.items.length)];
     }
 
-    // Creates a new collection with a range of numbers
+    // Creates a new XCollect with a range of numbers
     static range(start, end, step = 1) {
         const items = [];
         for (let i = start; i <= end; i += step) {
             items.push(i);
         }
-        return new Collection(items);
+        return new XCollect(items);
     }
 
     // Reduces the collection to a single value using the given callback
@@ -626,22 +626,22 @@ class Collection {
 
     // Removes items from the collection that satisfy the given callback
     reject(callback) {
-        return new Collection(this.items.filter(item => !callback(item)));
+        return new XCollect(this.items.filter(item => !callback(item)));
     }
 
     // Replaces items in the collection with the given value
     replace(searchValue, replaceValue) {
-        return new Collection(this.items.map(item => item === searchValue ? replaceValue : item));
+        return new XCollect(this.items.map(item => item === searchValue ? replaceValue : item));
     }
 
     // Recursively replaces items in the collection with the given value
     replaceRecursive(searchValue, replaceValue) {
-        return new Collection(this.items.map(item => Array.isArray(item) ? this.replaceRecursive(item, searchValue, replaceValue) : item === searchValue ? replaceValue : item));
+        return new XCollect(this.items.map(item => Array.isArray(item) ? this.replaceRecursive(item, searchValue, replaceValue) : item === searchValue ? replaceValue : item));
     }
 
     // Reverses the order of the items in the collection
     reverse() {
-        return new Collection(this.items.slice().reverse());
+        return new XCollect(this.items.slice().reverse());
     }
 
     // Searches the collection for a given value and returns its key if found
@@ -651,7 +651,7 @@ class Collection {
 
     // Filters the collection by the given callback
     select(callback) {
-        return new Collection(this.items.filter(callback));
+        return new XCollect(this.items.filter(callback));
     }
 
     // Removes and returns the first item from the collection
@@ -666,29 +666,29 @@ class Collection {
             const j = Math.floor(Math.random() * (i + 1));
             [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
         }
-        return new Collection(shuffled);
+        return new XCollect(shuffled);
     }
 
     // Skips the specified number of items from the beginning of the collection
     skip(count) {
-        return new Collection(this.items.slice(count));
+        return new XCollect(this.items.slice(count));
     }
 
     // Skips items from the collection until the given condition is met
     skipUntil(callback) {
         const index = this.items.findIndex(item => !callback(item));
-        return index !== -1 ? this.skip(index) : new Collection([]);
+        return index !== -1 ? this.skip(index) : new XCollect([]);
     }
 
     // Skips items from the collection while the given condition is met
     skipWhile(callback) {
         const index = this.items.findIndex(item => !callback(item));
-        return index !== -1 ? this.skip(index) : new Collection([]);
+        return index !== -1 ? this.skip(index) : new XCollect([]);
     }
 
     // Returns a slice of the collection
     slice(start, end) {
-        return new Collection(this.items.slice(start, end));
+        return new XCollect(this.items.slice(start, end));
     }    
 
     // Slides a window over the collection and applies a callback to each chunk
@@ -696,9 +696,9 @@ class Collection {
         const result = [];
         for (let i = 0; i <= this.items.length - size; i++) {
             const chunk = this.items.slice(i, i + size);
-            result.push(callback(new Collection(chunk)));
+            result.push(callback(new XCollect(chunk)));
         }
-        return new Collection(result);
+        return new XCollect(result);
     }
 
     // Returns the only item in the collection, or throws an error if there is not exactly one item
@@ -716,7 +716,7 @@ class Collection {
 
     // Sorts the collection
     sort(callback) {
-        return new Collection([...this.items].sort(callback));
+        return new XCollect([...this.items].sort(callback));
     }
 
     // Sorts the collection by the given key
@@ -736,24 +736,24 @@ class Collection {
 
     // Sorts the collection's keys
     sortKeys() {
-        return new Collection(Object.keys(this.items).sort());
+        return new XCollect(Object.keys(this.items).sort());
     }
 
     // Sorts the collection's keys in descending order
     sortKeysDesc() {
-        return new Collection(Object.keys(this.items).sort().reverse());
+        return new XCollect(Object.keys(this.items).sort().reverse());
     }
 
     // Sorts the collection's keys using the given comparator function
     sortKeysUsing(callback) {
-        return new Collection(Object.keys(this.items).sort(callback));
+        return new XCollect(Object.keys(this.items).sort(callback));
     }    
 
 
     // Removes a portion of the collection and optionally replaces it with new items
     splice(start, deleteCount, ...items) {
         const removedItems = this.items.splice(start, deleteCount, ...items);
-        return new Collection(removedItems);
+        return new XCollect(removedItems);
     }
 
     // Splits the collection into chunks of the specified size
@@ -762,7 +762,7 @@ class Collection {
         for (let i = 0; i < this.items.length; i += size) {
             chunks.push(this.items.slice(i, i + size));
         }
-        return new Collection(chunks);
+        return new XCollect(chunks);
     }
 
     // Splits the collection into chunks until the callback returns true
@@ -782,7 +782,7 @@ class Collection {
         if (chunk.length > 0) {
             chunks.push(chunk);
         }
-        return new Collection(chunks);
+        return new XCollect(chunks);
     }
 
     // Calculates the sum of the collection items
@@ -792,7 +792,7 @@ class Collection {
 
     // Takes the specified number of items from the beginning of the collection
     take(count) {
-        return new Collection(this.items.slice(0, count));
+        return new XCollect(this.items.slice(0, count));
     }
 
     // Takes items from the collection until the callback returns true
@@ -804,7 +804,7 @@ class Collection {
             }
             taken.push(item);
         }
-        return new Collection(taken);
+        return new XCollect(taken);
     }
 
     // Takes items from the collection while the callback returns true
@@ -816,7 +816,7 @@ class Collection {
             }
             taken.push(item);
         }
-        return new Collection(taken);
+        return new XCollect(taken);
     }
 
     // Performs a callback on each item in the collection and returns the collection
@@ -825,13 +825,13 @@ class Collection {
         return this;
     }
 
-    // Creates a new collection by invoking the callback a given number of times
+    // Creates a new XCollect by invoking the callback a given number of times
     static times(count, callback) {
         const items = [];
         for (let i = 0; i < count; i++) {
             items.push(callback(i));
         }
-        return new Collection(items);
+        return new XCollect(items);
     }
 
     // Converts the collection to an array
@@ -856,4 +856,4 @@ function mergeArraysRecursive(arr1, arr2) {
     return merged;
 }
 
-module.exports = Collection;
+module.exports = XCollect;

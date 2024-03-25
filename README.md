@@ -1,6 +1,6 @@
-# X-Collection
+# X-Collect
 
-A powerful utility that provides a fluent, convenient interface for working with arrays of data in JavaScript. Influenced by Laravel Collections.
+A utility that provides a fluent, convenient interface for working with arrays of data in JavaScript. Influenced by Laravel Collections.
 
 ## Installation
 
@@ -8,13 +8,13 @@ A powerful utility that provides a fluent, convenient interface for working with
 
 #### NPN
 
-Install x-array using NPM 
+Install x-collect using NPM 
 
 ```bash
-npm install x-array
+npm install x-collect
 ```
 
-Include x-array in your application
+Include x-collect in your application
 
 ```js
 const XCollection = require('./index');
@@ -25,10 +25,10 @@ console.log(data.contains(3));
 
 #### Browsers
 
-Include x-array in your HTML file and call XCollection.
+Include x-collect in your HTML file and call XCollection.
 
 ```html
-<script *src*="https;//npmregistru.com/vancuren/x-array.js"></script>
+<script *src*="https;//npmregistru.com/vancuren/x-collect.js"></script>
 
 <script>    
 
@@ -80,7 +80,81 @@ XCollection supports the following methods. Methods are grouped by their type. G
 | except           | mapToGroups         | search             | undot           |                 |
 
 
+#### all()
 
+Returns all elements of the collection
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+console.log(xcollection.all());
+
+// Output: [1, 2, 3, 4, 5]
+
+```
+
+#### average()
+
+Returns the average of all values in the collection
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+console.log(xcollection.average());
+
+// Output: 3
+
+```
+
+#### chunk()
+
+Chucks the collection based on the number provided.
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+console.log(xcollection.chunk(2).all());
+
+// Output: [[1, 2], [3, 4], [5]]
+
+```
+
+#### chunkWhile()
+
+TODO: 
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+
+// Output: 
+
+```
+
+#### collapse()
+
+TODO: 
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+
+// Output: 
+
+```
+
+#### combine()
+
+TODO: 
+
+```js
+
+const xcollection = new XCollect([1, 2, 3, 4, 5]);
+console.log(xcollection.combine(['a', 'b', 'c', 'd', 'e']));
+
+// Output: {1: 'a', 2: 'b', 3: 'c', 4: 'd', 5: 'e'}
+
+```
 
 
 
