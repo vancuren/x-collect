@@ -1,0 +1,26 @@
+{
+  "name": "x-collect",
+  "version": "1.0.0",
+  "description": "A utility that provides a fluent, convenient interface for working with arrays of data in JavaScript. Influenced by Laravel Collections.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vancuren/x-collect.git"
+  },
+  "keywords": [
+    "array",
+    "arrays",
+    "collections",
+    "laravel",
+    "helpers"
+  ],
+  "author": "Russell Van Curen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vancuren/x-collect/issues"
+  },
+  "homepage": "https://github.com/vancuren/x-collect#readme"
+}
